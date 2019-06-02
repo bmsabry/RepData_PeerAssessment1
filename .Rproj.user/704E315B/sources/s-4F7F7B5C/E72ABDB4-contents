@@ -1,12 +1,17 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
+title: "Project1ReproducibleResearch"
+author: "Bassam Abdelnabi"
+date: "5/30/2019"
 output: 
-  html_document:
-    keep_md: true
+  html_document: 
+    keep_md: yes
 ---
 
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-## Loading and preprocessing the data
+### Mean per day analysis
 
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
@@ -24,29 +29,14 @@ medianstepsperday<-tapply(Activity$steps, Activity$date, median,na.rm=TRUE)
 #this is the median number of steps for all days
 daydata<-unique(strptime(Activity$date,"%Y-%m-%d"))
 
-```
-
-## What is mean total number of steps taken per day?
-There are multiple ways to understand what is required in this assignment. Downbelow i show two graphs. The first one is based on the assumption that what is required is the mean steps per day (for every day). In this case the mean for every day has to be reported in a table form. The second graph assumes that what is needed is just the average of all days. In this case the mean is simply one mean as well as the median is just one median
-
-Here is the first way to show the output
-
-```{r, message=FALSE, warning=FALSE}
-
 plot(x = daydata, y = sumstepsperday, main = "Total Steps per day", xlab = "Date", ylab = "Steps", type = "h")
+
 Output1<-data.frame(daydata,meanstepsperday,medianstepsperday)
 Output1
 ```
-Now the second way to show the output
 
-```{r, message=FALSE, warning=FALSE}
-hist(sumstepsperday)
-MeanStepsPerDay<-mean(tapply(Activity$steps, Activity$date, sum,na.rm=TRUE))
-MedianStepsPerDay<-median(tapply(Activity$steps, Activity$date, sum,na.rm=TRUE))
-cat("The mean number of steps per day for all days is", MeanStepsPerDay, "steps. While the median is",MedianStepsPerDay,"steps")
+### Daily activity pattern
 
-```
-## What is the average daily activity pattern?
 ```{r, message=FALSE, warning=FALSE}
 
 #getting mean number of steps
@@ -58,9 +48,8 @@ plot(time,Meanstepsperinterval,type = "l")
 MaxInterval<-which.max(Meanstepsperinterval)
 cat("The max number of steps occurs at interval", MaxInterval[[1]], "which corresponds to",Activity$interval[MaxInterval[[1]]] )
 ```
+### Handling NA
 
-
-## Imputing missing values
 ```{r, message=FALSE, warning=FALSE}
 #getting the number of NA
 NAInTheData<-sum(is.na(Activity))
@@ -80,18 +69,11 @@ medianstepsperday<-tapply(ActivityNAFilled$steps, ActivityNAFilled$date, median,
 #this is the median number of steps for all days
 
 plot(x = daydata, y = sumstepsperday, main = "Total Steps per day", xlab = "Date", ylab = "Steps", type = "h")
-```
-## It is clear that both plots are different. Now we show the second way again for estimating this output as we have done before
-
-```{r, message=FALSE, warning=FALSE}
-hist(sumstepsperday)
-MeanStepsPerDay<-mean(tapply(ActivityNAFilled$steps, ActivityNAFilled$date, sum,na.rm=TRUE))
-MedianStepsPerDay<-median(tapply(ActivityNAFilled$steps, ActivityNAFilled$date, sum,na.rm=TRUE))
-cat("The mean number of steps per day for all days with NA filled is", MeanStepsPerDay, "steps. While the median is",MedianStepsPerDay,"steps")
 
 ```
+It is clear that both plots are different
 
-## Are there differences in activity patterns between weekdays and weekends?
+### Weekend vs Weekday differences
 
 ```{r, message=FALSE, warning=FALSE}
 
